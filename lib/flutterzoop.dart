@@ -8,6 +8,7 @@ import 'package:flutterzoop/src/flutterzoop_utils.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'gen/flutterzoop.pb.dart' as protos;
+import 'src/flutterzoop_utils.dart';
 
 part 'src/constants.dart';
 part 'src/flutterzoop.dart';
