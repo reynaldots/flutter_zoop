@@ -21,7 +21,7 @@ class FlutterzoopUtils {
       final DateFormat formatter = DateFormat('yyyy-MM-dd');
       final String dtFormatted = formatter.format(DateTime.now());
 
-      String path = '$directory/pinpadLogs/pinpadHistoryData-$dtFormatted.txt';
+      String path = '$directory/box247vm/logs_pinpad/pinpadHistoryData-$dtFormatted.txt';
 
       if (await File(path).exists()) {
         return File(path);
