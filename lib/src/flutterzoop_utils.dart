@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class FlutterzoopUtils {
-
   /// Método para recuperação do diretório de downloads
   Future<String> getDownloadDirectoryPath() async {
     return await ExtStorage.getExternalStoragePublicDirectory(
@@ -21,7 +20,8 @@ class FlutterzoopUtils {
       final DateFormat formatter = DateFormat('yyyy-MM-dd');
       final String dtFormatted = formatter.format(DateTime.now());
 
-      String path = '$directory/box247vm/logs_pinpad/pinpadHistoryData-$dtFormatted.txt';
+      String path =
+          '$directory/box247vm/logs_pinpad/pinPadLogs_$dtFormatted.txt';
 
       if (await File(path).exists()) {
         return File(path);
@@ -36,7 +36,7 @@ class FlutterzoopUtils {
   }
 
   /// Método para salvamento dos dados de histórico
-  Future<File> savePinpadHistoryData(String data) async {
+  Future<void> savePinpadHistoryData(String data) async {
     int attempts = 0;
 
     while (attempts < 4) {
@@ -45,10 +45,11 @@ class FlutterzoopUtils {
 
         await file.writeAsString('::: LOG: ${DateTime.now()} -- $data\n\n',
             mode: FileMode.append);
+        break;
       } catch (e) {
         attempts++;
         if (attempts >= 4) {
-          return null;
+          break;
         }
       }
     }
