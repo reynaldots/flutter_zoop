@@ -1,10 +1,11 @@
 import 'dart:io';
 
 import 'package:ext_storage/ext_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class FlutterzoopUtils {
-  
+
   /// Método para recuperação do diretório de downloads
   Future<String> getDownloadDirectoryPath() async {
     return await ExtStorage.getExternalStoragePublicDirectory(
@@ -15,7 +16,18 @@ class FlutterzoopUtils {
   Future<File> getPinpadHistoryFile() async {
     if (await Permission.storage.request().isGranted) {
       final directory = await getDownloadDirectoryPath();
-      return File("$directory/pinpadHistoryData.txt");
+
+      // Recuperando o arquivo do dia atual
+      final DateFormat formatter = DateFormat('yyyy-MM-dd');
+      final String dtFormatted = formatter.format(DateTime.now());
+
+      String path = '$directory/box247vm/logs_pinpad/pinpadHistoryData-$dtFormatted.txt';
+
+      if (await File(path).exists()) {
+        return File(path);
+      } else {
+        return File(path).create(recursive: true);
+      }
     } else {
       print(
           "Sem permissão para acesso ao diretório de salvamento do arquivo de texto");
@@ -31,9 +43,8 @@ class FlutterzoopUtils {
       try {
         final file = await getPinpadHistoryFile();
 
-        await file.writeAsString('\n\n${DateTime.now()} -- $data',
+        await file.writeAsString('::: LOG: ${DateTime.now()} -- $data\n\n',
             mode: FileMode.append);
-
       } catch (e) {
         attempts++;
         if (attempts >= 4) {
@@ -43,5 +54,4 @@ class FlutterzoopUtils {
     }
     return null;
   }
-
 }
