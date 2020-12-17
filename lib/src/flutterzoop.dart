@@ -41,18 +41,12 @@ class FlutterZoop {
   Stream<MethodCall> get _methodStream => _methodStreamController
       .stream; // Used internally to dispatch methods from platform.
 
-  String lastPinpadLogSaved = "";
-
   /// Singleton boilerplate
   FlutterZoop._() {
     _channel.setMethodCallHandler((MethodCall call) {
-      /// Gravando dados do Pinpad localmente
-      // Verificando se o ultimo dado salvo é igual ao que será salvo no momento
-      //  se sim, não salva para evitar redundância
-      if (lastPinpadLogSaved != call.arguments) {
-        lastPinpadLogSaved = call.arguments;
-        flutterzoopUtils.savePinpadHistoryData(call.arguments);
-      }
+      
+      // Salvando log do pinpad no arquivo local
+      flutterzoopUtils.savePinpadHistoryData(call.arguments);
 
       print('call.method ${call.method == "Devices"}');
       switch (call.method) {

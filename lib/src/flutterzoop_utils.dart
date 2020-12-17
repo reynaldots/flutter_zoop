@@ -36,21 +36,18 @@ class FlutterzoopUtils {
   }
 
   /// Método para salvamento dos dados de histórico
-  Future<void> savePinpadHistoryData(String data) async {
+  Future<File> savePinpadHistoryData(String data) async {
     int attempts = 0;
 
     while (attempts < 4) {
       try {
         final file = await getPinpadHistoryFile();
 
-        await file.writeAsString('::: LOG: ${DateTime.now()} -- $data\n\n',
+        return await file.writeAsString('::: LOG: ${DateTime.now()} -- $data\n\n',
             mode: FileMode.append);
-        break;
+            
       } catch (e) {
         attempts++;
-        if (attempts >= 4) {
-          break;
-        }
       }
     }
     return null;
