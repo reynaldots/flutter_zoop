@@ -21,7 +21,7 @@ class FlutterzoopUtils {
       final String dtFormatted = formatter.format(DateTime.now());
 
       String path =
-          '$directory/box247vm/logs_pinpad/pinPadLogs_$dtFormatted.txt';
+          '$directory/box247vm/logs_pinpad/${dtFormatted}_pinPadLogs.txt';
 
       if (await File(path).exists()) {
         return File(path);
@@ -43,9 +43,9 @@ class FlutterzoopUtils {
       try {
         final file = await getPinpadHistoryFile();
 
-        return await file.writeAsString('::: LOG: ${DateTime.now()} -- $data\n\n',
+        return await file.writeAsString(
+            '::: LOG: ${DateTime.now()} -- $data\n\n',
             mode: FileMode.append);
-            
       } catch (e) {
         attempts++;
       }
