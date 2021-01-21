@@ -112,9 +112,8 @@ public class FlutterzoopPlugin implements FlutterPlugin, ActivityAware, MethodCa
 
   /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
-    if (instance == null) {
-      instance = new FlutterzoopPlugin();
-    }
+    FlutterzoopPlugin instance = new FlutterzoopPlugin();
+    
     Activity activity = registrar.activity();
     Application application = null;
     if (registrar.context() != null) {
@@ -164,6 +163,7 @@ public class FlutterzoopPlugin implements FlutterPlugin, ActivityAware, MethodCa
       Log.i(TAG, "setup");
       this.activity = activity;
       this.application = application;
+      this.context = application;
       channel = new MethodChannel(messenger, NAMESPACE + "/methods");
       channel.setMethodCallHandler(this);
       stateChannel = new EventChannel(messenger, NAMESPACE + "/state");
@@ -423,9 +423,9 @@ public class FlutterzoopPlugin implements FlutterPlugin, ActivityAware, MethodCa
       }
 
       case "startScan": {
-        if (ContextCompat.checkSelfPermission(activity,
+        if (ContextCompat.checkSelfPermission(context,
             Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-          ActivityCompat.requestPermissions(activity, new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+          ActivityCompat.requestPermissions(activityBinding.getActivity(), new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
               REQUEST_FINE_LOCATION_PERMISSIONS);
           pendingCall = call;
           pendingResult = result;
@@ -525,13 +525,13 @@ public class FlutterzoopPlugin implements FlutterPlugin, ActivityAware, MethodCa
     public void onListen(Object o, EventChannel.EventSink eventSink) {
       sink = eventSink;
       IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-      activity.registerReceiver(mReceiver, filter);
+      context.registerReceiver(mReceiver, filter);
     }
 
     @Override
     public void onCancel(Object o) {
       sink = null;
-      activity.unregisterReceiver(mReceiver);
+      context.unregisterReceiver(mReceiver);
     }
   };
 
